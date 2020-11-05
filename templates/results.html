@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <main>
+    <div class="container">
+
+         {% for category, score in scores %}
+                <p>
+                    {{ category }}   {{ score }}
+                </p>
+            {% endfor %}
+
+
+    </div>
+  </main>
+
+{% endblock content %}
+
+

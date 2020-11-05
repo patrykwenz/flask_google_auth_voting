@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <form method="POST">
+        <div class="answers-container">
+            <fieldset>
+                <legend>{{ question }}</legend>
+
+                <div class="answers-inner">
+
+                    {% for colour in colours %}
+
+                        <div class="custom-control custom-checkbox mb-3">
+                            <input class="custom-control-input" id={{ colour }} type="checkbox" name={{ colour }}>
+                            <label class="custom-control-label" for={{ colour }}>{{ colour }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+                <input type="submit" value="Submit now"/>
+            </fieldset>
+        </div>
+
+    </form>
+
+
+
+
+{% endblock content %}
+
+

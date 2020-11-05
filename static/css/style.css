@@ -1,0 +1,108 @@
+/* Required height of parents of the Half Page Carousel for proper displaying carousel itself */
+html,
+body,
+.view {
+    height: 100%;
+}
+
+/* Half Page Carousel itself*/
+.carousel {
+    height: 50%;
+}
+
+.carousel .carousel-inner {
+    height: 100%;
+}
+
+.carousel .carousel-inner .carousel-item,
+.carousel .carousel-inner .active {
+    height: 100%;
+}
+
+/* Adjustment for mobile devices*/
+@media (max-width: 776px) {
+    .carousel {
+        height: 100%;
+    }
+}
+
+/* Footer color for sake of consistency with Navbar */
+.page-footer {
+    background-color: #EEEEEB;
+}
+
+.my-nav-color {
+    background-color: white;
+}
+
+.img {
+  width: 300px;
+  height: 70px;
+}
+
+.logo-image {
+    width: 400px;
+    height: 50px;
+}
+
+body {
+    background-color: #EEEEEB;
+}
+
+.nav-test {
+    background-color: #7D999B;
+}
+
+li {
+    margin-right: 40px;
+}
+
+.nav2 li {
+    margin-right: 10px;
+}
+
+.white-bold-text {
+    color: white;
+    font-size: 30px;
+    font-weight: 400;
+    text-align: center;
+}
+
+.black-bold-text {
+    color: black;
+    font-size: 100px;
+    font-weight: 400;
+    text-align: center;
+}
+
+.my-nav-size {
+    padding: 20px 40px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.profile-picture{
+    width: 65px;
+    height: 65px;
+}
+.drag-down{
+    margin: 100px 0px;
+}
+
+.my-page-button-size {
+    font-size: 26px;
+}
+
+.answers-container{
+    width: 500px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.custom-checkbox{
+    padding-left: 15px;
+}
+.answers-inner{
+    width: auto;
+    text-align: left;
+}
