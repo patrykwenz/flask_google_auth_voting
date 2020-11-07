@@ -2,6 +2,15 @@
 
 {% block content %}
 
+    <div class="dropdown">
+        <button class="dropbtn">Wybierz głosowanie</button>
+        <div class="dropdown-content">
+            {% for id, lab in vote_labels %}
+                <a href="/vote/{{ id }}">{{ lab }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
     <form method="POST">
         <div class="answers-container">
             <fieldset>
@@ -9,11 +18,11 @@
 
                 <div class="answers-inner">
 
-                    {% for colour in colours %}
+                    {% for ans in answers %}
 
                         <div class="custom-control custom-checkbox mb-3">
-                            <input class="custom-control-input" id={{ colour }} type="checkbox" name={{ colour }}>
-                            <label class="custom-control-label" for={{ colour }}>{{ colour }}</label>
+                            <input class="custom-control-input" id={{ ans }} type="checkbox" name={{ ans }}>
+                            <label class="custom-control-label" for={{ ans }}>{{ ans }}</label>
                         </div>
                     {% endfor %}
                 </div>

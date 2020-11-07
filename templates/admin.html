@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+
+
+
+
+    <form method="POST">
+
+        <div class="ans-container">
+            <div>
+                <label for="question">Question:</label>
+                <input class="ans-inner" type="text" id="question" name="question">
+            </div>
+            <div>
+                <label style="margin-top: 100px" for="answers">Answers</label>
+                <input class="ans-inner" type="text" id="answers" name="answers">
+            </div>
+            <input style="margin-top: 10px" type="submit" value="Submit now"/>
+        </div>
+
+
+    </form>
+
+{% endblock content %}
+
+

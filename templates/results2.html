@@ -3,6 +3,15 @@
 
 {% block content %}
 
+    <div class="dropdown">
+        <button class="dropbtn">Wybierz głosowanie</button>
+        <div class="dropdown-content">
+            {% for id, lab in vote_labels %}
+                <a href="/results/{{ id }}">{{ lab }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
 <body>
   <center>
     <h1>{{ title }}</h1>

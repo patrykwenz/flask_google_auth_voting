@@ -18,33 +18,39 @@
             {% if current_user.is_anonymous %}
 
 
-                <li class="nav-item">
-                    <a class="oauth-container btn darken-4 white black-text  my-nav-size" href="/vote">
-                        Vote
-                    </a>
-                </li>
+            <li class="nav-item">
+                <a class="oauth-container btn darken-4 white black-text  my-nav-size" href="/vote">
+                    Vote
+                </a>
+            </li>
 
-                <li class="nav-item  ">
-                    <a class="oauth-container btn darken-4 white black-text  my-nav-size" href="/results">
-                        Results
-                    </a>
-                </li>
+            <li class="nav-item  ">
+                <a class="oauth-container btn darken-4 white black-text  my-nav-size" href="/results">
+                    Results
+                </a>
+            </li>
 
 
-
-                <li class="nav-item ">
-                    <a class="oauth-container btn darken-4 white black-text  my-nav-size" href="/login">
-                        <div class="center">
-                            <img width="20px" alt="Google sign-in"
-                                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"/>
-                        </div>
-                    </a>
-                </li>
-
+            <li class="nav-item ">
+                <a class="oauth-container btn darken-4 white black-text  my-nav-size" href="/login">
+                    <div class="center">
+                        <img width="20px" alt="Google sign-in"
+                             src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"/>
+                    </div>
+                </a>
+            </li>
 
 
 
             {% else %}
+
+                {% if current_user.is_admin == True %}
+                <li class="nav-item">
+                    <a class="oauth-container btn darken-4 white black-text  my-nav-size" href="/admin">
+                        ADM
+                    </a>
+                </li>
+                {% endif %}
 
                 <li class="nav-item">
                     <a class="oauth-container btn darken-4 white black-text  my-nav-size" href="/vote">
@@ -61,10 +67,12 @@
 
                 <li class="nav-item">
                     <div class="gb_fb" style="display: inline-block"><img class="gb_Ma gbip gb_jb profile-picture"
-                                            src={{ current_user.profile_pic }}
-                                                    title="Profil" alt="" aria-hidden="true" data-atf="0">
+                                                                          src={{ current_user.profile_pic }}
+                                                                                  title="Profil" alt=""
+                                                                          aria-hidden="true" data-atf="0">
                     </div>
-                    <a style="display: inline-block" class="oauth-container btn darken-4 white black-text  my-nav-size" href="/logout">
+                    <a style="display: inline-block" class="oauth-container btn darken-4 white black-text  my-nav-size"
+                       href="/logout">
                         Logout
                     </a>
                 </li>

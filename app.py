@@ -2,6 +2,8 @@
 import json
 import os
 import pymongo
+import string
+import random
 
 # Third-party libraries
 from flask import Flask, redirect, request, url_for, render_template, flash
@@ -42,6 +44,10 @@ login_manager.init_app(app)
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 
+def id_generator(size=8, chars=string.ascii_lowercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
 # Flask-Login helper to retrieve a user from our db
 @login_manager.user_loader
 def load_user(user_id):
@@ -52,15 +58,57 @@ def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
 
 
+@app.route("/admin", methods=["GET", "POST"])
+def admin():
+    if current_user.is_admin:
+        if request.method == "POST":
+            q = request.form["question"]
+            ans = request.form["answers"].split(",")
+            voting_id = id_generator()
+            print(ans)
+
+            query = {
+                "voting_id": voting_id,
+                "title": q,
+                "ans": ans,
+                "creator": current_user.id
+
+            }
+
+            cluster_insert = db["Info"].insert_one(query)
+            flash("Question added", category="info")
+            return redirect(url_for("index"))
+
+        return render_template("admin.html")
+
+
+    else:
+        flash("You are not admin", category="danger")
+        return redirect(url_for("index"))
+
+
 @app.route("/")
 def index():
     return render_template("home.html")
 
 
-@app.route("/vote", methods=["GET", "POST"])
+@app.route("/vote")
 def vote():
-    q = "What is Your Favorite Colour?"
-    colours = ["RED", "YELLOW", "BLUE"]
+    vote_labels = list(db["Info"].distinct("voting_id"))
+    return redirect(url_for("voteparam", voting_id=vote_labels[0]))
+
+
+@app.route("/vote/<voting_id>", methods=["GET", "POST"])
+def voteparam(voting_id):
+    vote_labels = []
+    query = db["Info"].find()
+    for col in query:
+        vote_labels.append([col["voting_id"], col["title"]])
+
+    voting_data = db["Info"].find_one({"voting_id": voting_id})
+    q = voting_data["title"]
+    answers = voting_data["ans"]
+
     if current_user.is_authenticated:
         if request.method == "POST":
             checboxes_votes = [val for val in request.form]
@@ -71,31 +119,46 @@ def vote():
                 flash('Too many args', category="danger")
             else:
                 voters_id = current_user.id
-                if Vote.vote_exists(db, voters_id):
+                if Vote.vote_exists(db, voters_id, voting_id):
                     flash('You can not vote more than once', category="danger")
-                    return render_template("vote.html", question=q, colours=colours)
+                    return render_template("vote.html", question=q, answers=answers, vote_labels=vote_labels)
                 else:
                     vote = str(checboxes_votes[0])
-                    Vote.create(db, voters_id, vote)
-                    return redirect(url_for("results"))
+                    Vote.create(db, voters_id, vote, voting_id)
+                    return redirect(url_for("results", voting_id=voting_id))
     else:
         return redirect(url_for("login"))
 
-    return render_template("vote.html", question=q, colours=colours)
+    return render_template("vote.html", question=q, answers=answers, vote_labels=vote_labels)
 
 
-@app.route("/results", methods=["GET"])
+@app.route("/results")
 def results():
-    title = 'Voting results'
-    bar_labels = db.Votes.distinct("vote")
+    vote_labels = list(db["Info"].distinct("voting_id"))
+    return redirect(url_for("resultsparam", voting_id=vote_labels[0]))
+
+
+@app.route("/results/<voting_id>")
+def resultsparam(voting_id):
+    vote_labels = []
+    query = db["Info"].find()
+    for col in query:
+        vote_labels.append([col["voting_id"], col["title"]])
+
+    # get vote info
+    voting_data = db["Info"].find_one({"voting_id": voting_id})
+    title = voting_data["title"]
+    bar_labels = voting_data["ans"]
+
     bar_values = []
-    for field in fields:
-        bar_values.append(db["Votes"].find({"vote": field}).count())
+    for field in bar_labels:
+        bar_values.append(db[voting_id].find({"vote": field}).count())
 
     background_colors = possible_background_colors[:len(bar_labels)]
     border_colors = possible_border_colors[:len(bar_labels)]
     return render_template("results2.html", title=title,
-                           labels=bar_labels, values=bar_values, colors=background_colors, borders=border_colors)
+                           labels=bar_labels, values=bar_values, colors=background_colors, borders=border_colors,
+                           vote_labels=vote_labels)
 
 
 @app.route("/login")
@@ -162,18 +225,18 @@ def callback():
     # Create a user in your db with the information provided
     # by Google
     user = User(
-        id_=unique_id, name=users_name, email=users_email, profile_pic=picture
+        id_=unique_id, name=users_name, email=users_email, profile_pic=picture, is_admin=False
     )
 
     # Doesn't exist? Add it to the database.
     if not User.get(db, unique_id):
-        User.create(db, unique_id, users_name, users_email, picture)
+        User.create(db, unique_id, users_name, users_email, picture, False)
 
     # Begin user session by logging the user in
     login_user(user)
 
     # Send user back to homepage
-    return redirect(url_for("index"))
+    return redirect(url_for("vote"))
 
 
 @app.route("/logout")
@@ -184,7 +247,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    fields = db.Votes.distinct("vote")
-
-    # print(field, num)
     app.run(ssl_context="adhoc", debug=True)
