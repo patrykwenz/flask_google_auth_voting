@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <div class="ans-container">
+
+        <form id="form" method="POST">
+            <div id="inform">
+                <input class="ans-inner" type="text" id="question" name="question" placeholder="Question">
+                <input type="text" id="input-1" name="answer" placeholder="Answer 1">
+                <input type="text" id="input-2" name="answer" placeholder="Answer 2">
+
+            </div>
+
+            <div>
+                <button style="margin-top: 5px" id="btn" type="button">+ Add answer</button>
+                <input type="submit" value="Submit now"/>
+
+            </div>
+        </form>
+
+    </div>
+
+
+
+
+    <script>
+        (function () {
+            var counter = 2;
+            var btn = document.getElementById('btn');
+            var form = document.getElementById('inform');
+            var addInput = function () {
+                counter++;
+                var input = document.createElement("input");
+                input.id = 'input-' + counter;
+                input.type = 'text';
+                input.name = 'answer';
+                input.placeholder = 'Answer ' + counter;
+                form.appendChild(input);
+            };
+            btn.addEventListener('click', function () {
+                addInput();
+            }.bind(this));
+        })();
+    </script>
+
+    <style>
+        input {
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+{% endblock content %}
+
+

@@ -60,31 +60,48 @@ def get_google_provider_cfg():
 
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
-    if current_user.is_admin:
-        if request.method == "POST":
-            q = request.form["question"]
-            ans = request.form["answers"].split(",")
-            voting_id = id_generator()
-            print(ans)
+    if current_user.is_authenticated:
+        if current_user.is_admin:
+            if request.method == "POST":
+                other_questions = db["Info"].find()
+                q = request.form["question"]
 
-            query = {
-                "voting_id": voting_id,
-                "title": q,
-                "ans": ans,
-                "creator": current_user.id
+                if q == "":
+                    flash("Question can not be empty", category="danger")
+                    return render_template("admin2.html")
 
-            }
+                for quer in other_questions:
+                    if "".join(q.split(" ")).lower() == "".join(quer["title"].split(" ")).lower():
+                        flash("Similar question already exists", category="danger")
+                        return render_template("admin2.html")
 
-            cluster_insert = db["Info"].insert_one(query)
-            flash("Question added", category="info")
+                ans = []
+                for a in request.form.getlist('answer'):
+                    if a != "":
+                        ans.append(a)
+                if len(ans) < 2:
+                    flash("U need more answers", category="danger")
+                    return render_template("admin2.html")
+
+                else:
+                    voting_id = id_generator()
+                    query = {
+                        "voting_id": voting_id,
+                        "title": q,
+                        "ans": ans,
+                        "creator": current_user.id
+
+                    }
+                    cluster_insert = db["Info"].insert_one(query)
+                    flash("Question added", category="info")
+                    return render_template("admin2.html")
+            return render_template("admin2.html")
+
+        else:
+            flash("You are not admin", category="danger")
             return redirect(url_for("index"))
-
-        return render_template("admin.html")
-
-
     else:
-        flash("You are not admin", category="danger")
-        return redirect(url_for("index"))
+        return redirect(url_for("login"))
 
 
 @app.route("/")
