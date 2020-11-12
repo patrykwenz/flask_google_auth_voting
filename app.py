@@ -78,17 +78,20 @@ def admin():
                 ans = []
                 for a in request.form.getlist('answer'):
                     if a != "":
-                        ans.append(a)
+                        ans.append(a.strip())
                 if len(ans) < 2:
                     flash("U need more answers", category="danger")
                     return render_template("admin2.html")
 
                 else:
+                    ans_dict = {}
+                    for key in ans:
+                        ans_dict[key] = "".join(key.split(" ")).lower()
                     voting_id = id_generator()
                     query = {
                         "voting_id": voting_id,
                         "title": q,
-                        "ans": ans,
+                        "ans": ans_dict,
                         "creator": current_user.id
 
                     }
@@ -124,12 +127,15 @@ def voteparam(voting_id):
 
     voting_data = db["Info"].find_one({"voting_id": voting_id})
     q = voting_data["title"]
-    answers = voting_data["ans"]
+    answers_ids = voting_data["ans"].values()
+    print(answers_ids)
 
     if current_user.is_authenticated:
         if request.method == "POST":
             checboxes_votes = [val for val in request.form]
+            print(request.data)
             print(checboxes_votes)
+
             if len(checboxes_votes) == 0:
                 flash('Vote can not be empty', category="danger")
             if len(checboxes_votes) > 1:
@@ -138,15 +144,17 @@ def voteparam(voting_id):
                 voters_id = current_user.id
                 if Vote.vote_exists(db, voters_id, voting_id):
                     flash('You can not vote more than once', category="danger")
-                    return render_template("vote.html", question=q, answers=answers, vote_labels=vote_labels)
+                    return render_template("vote.html", question=q, answers=answers_ids, vote_labels=vote_labels)
                 else:
-                    vote = str(checboxes_votes[0])
+                    vote_id = str(checboxes_votes[0])
+                    swapped = {value: key for key, value in voting_data["ans"].items()}
+                    vote = swapped[vote_id]
                     Vote.create(db, voters_id, vote, voting_id)
                     return redirect(url_for("results", voting_id=voting_id))
     else:
         return redirect(url_for("login"))
 
-    return render_template("vote.html", question=q, answers=answers, vote_labels=vote_labels)
+    return render_template("vote.html", question=q, answers=answers_ids, vote_labels=vote_labels)
 
 
 @app.route("/results")
@@ -165,11 +173,14 @@ def resultsparam(voting_id):
     # get vote info
     voting_data = db["Info"].find_one({"voting_id": voting_id})
     title = voting_data["title"]
-    bar_labels = voting_data["ans"]
+    bar_labels = voting_data["ans"].keys()
+    print("lab", bar_labels)
 
     bar_values = []
     for field in bar_labels:
-        bar_values.append(db[voting_id].find({"vote": field}).count())
+        count = db[voting_id].count_documents({"vote": field})
+        print(field, count)
+        bar_values.append(count)
 
     background_colors = possible_background_colors[:len(bar_labels)]
     border_colors = possible_border_colors[:len(bar_labels)]
