@@ -83,6 +83,10 @@ def admin():
                     flash("U need more answers", category="danger")
                     return render_template("admin2.html")
 
+                if len(ans) > 20:
+                    flash("Too many answers max is 20", category="danger")
+                    return render_template("admin2.html")
+
                 else:
                     ans_dict = {}
                     for key in ans:
