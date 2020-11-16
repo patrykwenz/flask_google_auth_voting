@@ -20,8 +20,8 @@ from profile_user import User
 from vote import Vote
 from table_config import *
 
-GOOGLE_CLIENT_ID = "533144812198-9l5aidnhqlrmit1fr71pgg8bi4ek1ovv.apps.googleusercontent.com"
-GOOGLE_CLIENT_SECRET = "-v18ectzMnQEASKErYMmfbaN"
+GOOGLE_CLIENT_ID = "901248234984-n492ntn1880ismghddqams06dooe163l.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET = "XhpyUcyIOcoObHfoKawdZ5iD"
 GOOGLE_DISCOVERY_URL = (
     "https://accounts.google.com/.well-known/openid-configuration"
 
