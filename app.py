@@ -142,8 +142,12 @@ def voteparam(voting_id):
 
             if len(checboxes_votes) == 0:
                 flash('Vote can not be empty', category="danger")
+                return render_template("vote.html", question=q, answers=answers_ids, vote_labels=vote_labels)
+
             if len(checboxes_votes) > 1:
                 flash('Too many args', category="danger")
+                return render_template("vote.html", question=q, answers=answers_ids, vote_labels=vote_labels)
+
             else:
                 voters_id = current_user.id
                 if Vote.vote_exists(db, voters_id, voting_id):

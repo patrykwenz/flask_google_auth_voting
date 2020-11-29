@@ -68,7 +68,14 @@ var votingResulsChart = new Chart(myChart, {
         },
         tooltips:{
           enabled:true
-        }
+        },
+           scales: {
+        yAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }]
+    }
       }
     });
 </script>
