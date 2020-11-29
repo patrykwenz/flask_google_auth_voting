@@ -1,0 +1,14 @@
+[Unit]
+Description=Evoting-Server-Service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart=/var/www/evoting/./launch-server.sh
+
+[Install]
+WantedBy=multi-user.target
