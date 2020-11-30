@@ -58,8 +58,8 @@ def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
 
 
-@app.route("/admin", methods=["GET", "POST"])
-def admin():
+@app.route("/admin/add", methods=["GET", "POST"])
+def admin_add():
     if current_user.is_authenticated:
         if current_user.is_admin:
             if request.method == "POST":
@@ -105,7 +105,27 @@ def admin():
             return render_template("admin2.html")
 
         else:
-            flash("You are not admin", category="danger")
+            flash("You are not an admin", category="danger")
+            return redirect(url_for("index"))
+    else:
+        return redirect(url_for("login"))
+
+
+@app.route("/admin/delete", methods=["GET", "POST"])
+def admin_delete():
+    if current_user.is_authenticated:
+        if current_user.is_admin:
+            vote_labels = []
+            query = db["Info"].find()
+            for col in query:
+                vote_labels.append([col["voting_id"], col["title"]])
+            if request.method == "POST":
+                query = db["Info"].delete_one({"voting_id": request.form["voting_id"]})
+                flash('Succesfully deleted', category="info")
+                return redirect(url_for("admin_delete"))
+            return render_template("admin_delete.html", vote_labels=vote_labels)
+        else:
+            flash("You are not an admin", category="danger")
             return redirect(url_for("index"))
     else:
         return redirect(url_for("login"))
@@ -158,7 +178,7 @@ def voteparam(voting_id):
                     swapped = {value: key for key, value in voting_data["ans"].items()}
                     vote = swapped[vote_id]
                     Vote.create(db, voters_id, vote, voting_id)
-                    return redirect(url_for("results", voting_id=voting_id))
+                    return redirect(url_for("resultsparam", voting_id=voting_id))
     else:
         return redirect(url_for("login"))
 
