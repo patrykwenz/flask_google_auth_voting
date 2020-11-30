@@ -136,6 +136,9 @@ def index():
 @app.route("/vote")
 def vote():
     vote_labels = list(db["Info"].distinct("voting_id"))
+    if len(vote_labels) == 0:
+        flash("There are no votings to show", category="danger")
+        return redirect(url_for("index"))
     return redirect(url_for("voteparam", voting_id=vote_labels[0]))
 
 
@@ -182,6 +185,9 @@ def voteparam(voting_id):
 @app.route("/results")
 def results():
     vote_labels = list(db["Info"].distinct("voting_id"))
+    if len(vote_labels) == 0:
+        flash("There are no results to show", category="danger")
+        return redirect(url_for("index"))
     return redirect(url_for("resultsparam", voting_id=vote_labels[0]))
 
 
@@ -196,12 +202,10 @@ def resultsparam(voting_id):
     voting_data = db["Info"].find_one({"voting_id": voting_id})
     title = voting_data["title"]
     bar_labels = voting_data["ans"].keys()
-    print("lab", bar_labels)
 
     bar_values = []
     for field in bar_labels:
         count = db[voting_id].count_documents({"vote": field})
-        print(field, count)
         bar_values.append(count)
 
     background_colors = possible_background_colors[:len(bar_labels)]
