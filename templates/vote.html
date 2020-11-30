@@ -18,10 +18,10 @@
 
                 <div class="answers-inner">
 
-                    {% for ans in answers %}
+                    {% for lab, a in ans %}
                         <div class="custom-control custom-checkbox mb-3">
-                            <input class="custom-control-input" id={{ ans }} type="checkbox" name={{ ans }}>
-                            <label class="custom-control-label" for={{ ans }}>{{ ans }}</label>
+                            <input class="custom-control-input" id={{ a }} type="checkbox" name={{ a }}>
+                            <label class="custom-control-label" for={{ a }}>{{ lab }}</label>
                         </div>
                     {% endfor %}
                 </div>

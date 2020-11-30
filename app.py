@@ -148,28 +148,25 @@ def voteparam(voting_id):
 
     voting_data = db["Info"].find_one({"voting_id": voting_id})
     q = voting_data["title"]
-    answers_ids = voting_data["ans"].values()
-    print(answers_ids)
+    ans = voting_data["ans"].items()
 
     if current_user.is_authenticated:
         if request.method == "POST":
             checboxes_votes = [val for val in request.form]
-            print(request.data)
-            print(checboxes_votes)
-
             if len(checboxes_votes) == 0:
                 flash('Vote can not be empty', category="danger")
-                return render_template("vote.html", question=q, answers=answers_ids, vote_labels=vote_labels)
+                return render_template("vote.html", question=q, ans=ans, vote_labels=vote_labels)
 
             if len(checboxes_votes) > 1:
                 flash('Too many args', category="danger")
-                return render_template("vote.html", question=q, answers=answers_ids, vote_labels=vote_labels)
+                return render_template("vote.html", question=q, ans=ans, vote_labels=vote_labels)
 
             else:
                 voters_id = current_user.id
                 if Vote.vote_exists(db, voters_id, voting_id):
                     flash('You can not vote more than once', category="danger")
-                    return render_template("vote.html", question=q, answers=answers_ids, vote_labels=vote_labels)
+                    return render_template("vote.html", question=q, ans=ans,
+                                           vote_labels=vote_labels)
                 else:
                     vote_id = str(checboxes_votes[0])
                     swapped = {value: key for key, value in voting_data["ans"].items()}
@@ -179,7 +176,7 @@ def voteparam(voting_id):
     else:
         return redirect(url_for("login"))
 
-    return render_template("vote.html", question=q, answers=answers_ids, vote_labels=vote_labels)
+    return render_template("vote.html", question=q, ans=ans, vote_labels=vote_labels)
 
 
 @app.route("/results")
