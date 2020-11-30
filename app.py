@@ -16,9 +16,9 @@ from flask_login import (
 )
 from oauthlib.oauth2 import WebApplicationClient
 import requests
-from profile_user import User
-from vote import Vote
-from table_config import *
+from models.profile_user import User
+from models.vote import Vote
+from config.table_config import *
 
 GOOGLE_CLIENT_ID = "533144812198-9l5aidnhqlrmit1fr71pgg8bi4ek1ovv.apps.googleusercontent.com"
 GOOGLE_CLIENT_SECRET = "-v18ectzMnQEASKErYMmfbaN"
