@@ -62,7 +62,8 @@ def admin_add():
             if request.method == "POST":
                 other_questions = db["Info"].find()
                 q = request.form["question"]
-
+                print("rq", request)
+                print(request.form)
                 if q == "":
                     flash("Question can not be empty", category="danger")
                     return render_template("admin2.html")
@@ -96,7 +97,7 @@ def admin_add():
                         "creator": current_user.id
 
                     }
-                    cluster_insert = db["Info"].insert_one(query)
+                    cluster_insert = db["Info"].insert(query, check_keys=False)
                     flash("Question added", category="info")
                     return render_template("admin2.html")
             return render_template("admin2.html")
