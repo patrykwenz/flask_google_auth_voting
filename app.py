@@ -24,11 +24,8 @@ GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', None)
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', None)
 GOOGLE_DISCOVERY_URL = (
     "https://accounts.google.com/.well-known/openid-configuration"
-
 )
-
-client = pymongo.MongoClient(
-    "mongodb+srv://patmis:konto123@cluster0.zfgls.mongodb.net/Test?retryWrites=true&w=majority")
+client = pymongo.MongoClient(os.environ.get('MONGODB_CLIENT_URI', None))
 db = client["Glosowanie"]
 
 # Flask app setup
