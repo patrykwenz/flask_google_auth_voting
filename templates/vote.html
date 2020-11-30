@@ -3,7 +3,7 @@
 {% block content %}
 
     <div class="dropdown">
-        <button class="dropbtn">Wybierz głosowanie</button>
+        <button class="dropbtn">Select poll</button>
         <div class="dropdown-content">
             {% for id, lab in vote_labels %}
                 <a href="/vote/{{ id }}">{{ lab }}</a>
