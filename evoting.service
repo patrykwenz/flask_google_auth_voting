@@ -8,6 +8,7 @@ Type=simple
 Restart=always
 RestartSec=1
 User=root
+EnvironmentFile=/etc/systemd/system/evoting.env
 ExecStart=/var/www/evoting/./launch-server.sh
 
 [Install]
