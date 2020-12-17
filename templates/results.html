@@ -1,19 +1,84 @@
 {% extends "base.html" %}
 
+
 {% block content %}
-  <main>
-    <div class="container">
 
-         {% for category, score in scores %}
-                <p>
-                    {{ category }}   {{ score }}
-                </p>
+    <div class="dropdown">
+        <button class="dropbtn">Select poll</button>
+        <div class="dropdown-content">
+            {% for id, lab in vote_labels %}
+                <a href="/results/{{ id }}">{{ lab }}</a>
             {% endfor %}
-
-
+        </div>
     </div>
-  </main>
+
+<body>
+  <center>
+    <h1>{{ title }}</h1>
+  </center>
+  <div class="container">
+    <canvas id="myChart"></canvas>
+  </div>
+
+<script>
+  var barData = {
+        labels:[{% for item in labels %}
+               "{{ item }}",
+              {% endfor %}],
+
+        datasets:[{
+          label:'Votes',
+          data:[{% for item in values %}
+               "{{ item }}",
+              {% endfor %}],
+
+          backgroundColor:[{% for item in colors %}
+               "{{ item }}",
+              {% endfor %}],
+
+          borderColor:[{% for item in borders %}
+               "{{ item }}",
+              {% endfor %}],
+
+          borderWidth:1,
+          hoverBorderWidth:3,
+          hoverBorderColor:'#000'
+        }]
+      }
+
+    Chart.defaults.global.defaultFontSize = 18;
+    Chart.defaults.global.defaultFontColor = '#777';
+
+    let myChart = document.getElementById("myChart").getContext("2d");
+
+
+
+var votingResulsChart = new Chart(myChart, {
+      type:'bar',
+      data:barData,
+      options:{
+        legend:{display:false},
+        layout:{
+          padding:{
+            left:50,
+            right:0,
+            bottom:0,
+            top:0
+          }
+        },
+        tooltips:{
+          enabled:true
+        },
+           scales: {
+        yAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }]
+    }
+      }
+    });
+</script>
+</body>
 
 {% endblock content %}
-
-

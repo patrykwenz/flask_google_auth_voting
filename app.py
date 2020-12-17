@@ -20,15 +20,13 @@ from models.profile_user import User
 from models.vote import Vote
 from config.table_config import *
 
-GOOGLE_CLIENT_ID = "533144812198-9l5aidnhqlrmit1fr71pgg8bi4ek1ovv.apps.googleusercontent.com"
-GOOGLE_CLIENT_SECRET = "-v18ectzMnQEASKErYMmfbaN"
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', None)
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', None)
 GOOGLE_DISCOVERY_URL = (
     "https://accounts.google.com/.well-known/openid-configuration"
-
 )
-
-client = pymongo.MongoClient(
-    "mongodb+srv://patmis:konto123@cluster0.zfgls.mongodb.net/Test?retryWrites=true&w=majority")
+MONGODB_CLIENT_URI = os.environ.get('MONGODB_CLIENT_URI', None).replace('"', '')
+client = pymongo.MongoClient(MONGODB_CLIENT_URI)
 db = client["Glosowanie"]
 
 # Flask app setup
@@ -65,16 +63,14 @@ def admin_add():
             if request.method == "POST":
                 other_questions = db["Info"].find()
                 q = request.form["question"]
-                print("rq", request)
-                print(request.form)
                 if q == "":
                     flash("Question can not be empty", category="danger")
-                    return render_template("admin2.html")
+                    return render_template("admin_add.html")
 
                 for quer in other_questions:
                     if "".join(q.split(" ")).lower() == "".join(quer["title"].split(" ")).lower():
                         flash("Similar question already exists", category="danger")
-                        return render_template("admin2.html")
+                        return render_template("admin_add.html")
 
                 ans = []
                 for a in request.form.getlist('answer'):
@@ -82,11 +78,11 @@ def admin_add():
                         ans.append(a.strip())
                 if len(ans) < 2:
                     flash("U need more answers", category="danger")
-                    return render_template("admin2.html")
+                    return render_template("admin_add.html")
 
                 if len(ans) > 20:
                     flash("Too many answers max is 20", category="danger")
-                    return render_template("admin2.html")
+                    return render_template("admin_add.html")
 
                 else:
                     ans_dict = {}
@@ -102,8 +98,8 @@ def admin_add():
                     }
                     cluster_insert = db["Info"].insert(query, check_keys=False)
                     flash("Question added", category="info")
-                    return render_template("admin2.html")
-            return render_template("admin2.html")
+                    return render_template("admin_add.html")
+            return render_template("admin_add.html")
 
         else:
             flash("You are not an admin", category="danger")
@@ -214,7 +210,7 @@ def resultsparam(voting_id):
 
     background_colors = possible_background_colors[:len(bar_labels)]
     border_colors = possible_border_colors[:len(bar_labels)]
-    return render_template("results2.html", title=title,
+    return render_template("results.html", title=title,
                            labels=bar_labels, values=bar_values, colors=background_colors, borders=border_colors,
                            vote_labels=vote_labels)
 

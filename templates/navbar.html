@@ -18,38 +18,44 @@
             {% if current_user.is_anonymous %}
 
 
-            <li class="nav-item">
-                <a class="oauth-container btn darken-4 white black-text  my-nav-size" href="/vote">
-                    Vote
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a class="oauth-container btn darken-4 white black-text  my-nav-size" href="/vote">
+                        Vote
+                    </a>
+                </li>
 
-            <li class="nav-item  ">
-                <a class="oauth-container btn darken-4 white black-text  my-nav-size" href="/results">
-                    Results
-                </a>
-            </li>
+                <li class="nav-item  ">
+                    <a class="oauth-container btn darken-4 white black-text  my-nav-size" href="/results">
+                        Results
+                    </a>
+                </li>
 
 
-            <li class="nav-item ">
-                <a class="oauth-container btn darken-4 white black-text  my-nav-size" href="/login">
-                    <div class="center">
-                        <img width="20px" alt="Google sign-in"
-                             src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"/>
-                    </div>
-                </a>
-            </li>
+                <li class="nav-item ">
+                    <a class="oauth-container btn darken-4 white black-text  my-nav-size" href="/login">
+                        <div class="center">
+                            <img width="20px" alt="Google sign-in"
+                                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"/>
+                        </div>
+                    </a>
+                </li>
 
 
 
             {% else %}
 
                 {% if current_user.is_admin == True %}
-                <li class="nav-item">
-                    <a class="oauth-container btn darken-4 white black-text  my-nav-size" href="/admin">
-                        ADM
-                    </a>
-                </li>
+                    <li class="nav-item dropdown">
+                        <a class="oauth-container btn darken-4 white black-text  my-nav-size">
+                            ADM
+                        </a>
+                        <div class="dropdown-content">
+                            <a href="/admin/add">Add poll</a>
+                            <a href="/admin/delete">Delete poll</a>
+                        </div>
+
+
+                    </li>
                 {% endif %}
 
                 <li class="nav-item">
