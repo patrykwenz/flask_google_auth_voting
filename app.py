@@ -20,19 +20,13 @@ from models.profile_user import User
 from models.vote import Vote
 from config.table_config import *
 
-fGoogleClientId = open("/root/evoting/GOOGLE_CLIENT_ID", "r")
-fGoogleSecret = open("/root/evoting/GOOGLE_CLIENT_SECRET", "r")
-fMongoDbClientUri = open("/root/evoting/MONGODB_CLIENT_URI", "r")
-
-GOOGLE_CLIENT_ID = fGoogleClientId.read().replace('\n', '')
-GOOGLE_CLIENT_SECRET = fGoogleSecret.read().replace('\n', '')
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', None)
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', None)
 GOOGLE_DISCOVERY_URL = (
-    "https://accounts.google.com/.well-known/openid-configuration"
-)
-MONGODB_CLIENT_URI = fMongoDbClientUri.read().replace('\n', '')
+            "https://accounts.google.com/.well-known/openid-configuration"
+            )
+MONGODB_CLIENT_URI = os.environ.get('MONGODB_CLIENT_URI', None).replace('"', '')
 client = pymongo.MongoClient(MONGODB_CLIENT_URI)
-db = client["Glosowanie"]
-
 # Flask app setup
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
