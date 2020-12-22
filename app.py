@@ -25,7 +25,7 @@ GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', None)
 GOOGLE_DISCOVERY_URL = (
             "https://accounts.google.com/.well-known/openid-configuration"
             )
-MONGODB_CLIENT_URI = os.environ.get('MONGODB_CLIENT_URI', None).replace('"', '')
+MONGODB_CLIENT_URI = os.environ.get('MONGODB_CLIENT_URI', None)
 client = pymongo.MongoClient(MONGODB_CLIENT_URI)
 # Flask app setup
 app = Flask(__name__)
