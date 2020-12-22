@@ -92,7 +92,7 @@ In order to get started you have to through these steps:
 
 <!-- USAGE EXAMPLES -->
 ## Usage
-[Website](voting.ninjait.pl)
+[Website](https://voting.ninjait.pl)
 
 <!-- LICENSE -->
 ## License
