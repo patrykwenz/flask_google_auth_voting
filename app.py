@@ -23,10 +23,12 @@ from config.table_config import *
 GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', None)
 GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', None)
 GOOGLE_DISCOVERY_URL = (
-            "https://accounts.google.com/.well-known/openid-configuration"
-            )
+    "https://accounts.google.com/.well-known/openid-configuration"
+)
 MONGODB_CLIENT_URI = os.environ.get('MONGODB_CLIENT_URI', None)
 client = pymongo.MongoClient(MONGODB_CLIENT_URI)
+db = client["Glosowanie"]
+
 # Flask app setup
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
