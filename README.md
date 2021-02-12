@@ -2,7 +2,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="static/img/logo.png" alt="Logo">
+    <img src="website/static/img/logo.png" alt="Logo">
   </a>
 
   <h3 align="center">Safe e - voting system</h3>
