@@ -6,12 +6,12 @@ from flask_login import (
     LoginManager,
 )
 
-MONGODB_CLIENT_URI = os.environ.get('MONGODB_CLIENT_URI', None).replace('"', '')
-client = pymongo.MongoClient(MONGODB_CLIENT_URI)
-db = client["Glosowanie"]
-
 
 def create_app():
+    MONGODB_CLIENT_URI = os.environ.get('MONGODB_CLIENT_URI', None).replace('"', '')
+    client = pymongo.MongoClient(MONGODB_CLIENT_URI)
+    db = client["Glosowanie"]
+
     app = Flask(__name__)
     app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
 
