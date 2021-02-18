@@ -7,10 +7,9 @@ from flask_login import (
 )
 from .models import Vote
 from .config.table_config import *
-from . import db
+from .config.mongo_config import db
 
 views = Blueprint("views", __name__)
-
 
 
 def id_generator(size=8, chars=string.ascii_lowercase + string.digits):

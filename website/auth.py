@@ -4,27 +4,23 @@ from flask_login import (
     login_user,
     logout_user,
 )
-from oauthlib.oauth2 import WebApplicationClient
 import requests
 import json
-import os
 from .models import User
-from . import db
+from .config.mongo_config import db
+from .config.google_config import (
+    GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET,
+    GOOGLE_DISCOVERY_URL,
+    client
+)
 
 auth = Blueprint("auth", __name__)
 
 
-GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', None)
-GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', None)
-GOOGLE_DISCOVERY_URL = (
-    "https://accounts.google.com/.well-known/openid-configuration"
-)
-
-# OAuth 2 client setup
-client = WebApplicationClient(GOOGLE_CLIENT_ID)
-
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
+
 
 @auth.route("/login")
 def login():
